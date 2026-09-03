@@ -7,5 +7,6 @@ namespace AccesoDatos.Repositories
     {
         void Agregar(Autor autor);
         List<Autor> ObtenerTodos();
+        void Modificar(int id, string nuevoNombre);
     }
 }

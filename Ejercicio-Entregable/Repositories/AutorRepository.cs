@@ -25,5 +25,18 @@ namespace AccesoDatos.Repositories
                     .ToList();
             }
         }
+
+        public void Modificar(int id, string nuevoNombre)
+        {
+            using (var context = new DBcontext())
+            {
+                var autor = context.Autores.Find(id);
+                if (autor != null)
+                {
+                    autor.Nombre = nuevoNombre;
+                    context.SaveChanges();
+                }
+            }
+        }
     }
 }

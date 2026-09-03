@@ -2,11 +2,10 @@ using System.Collections.Generic;
 using System.Linq;
 using AccesoDatos.Data;
 using AccesoDatos.Models;
-using Microsoft.EntityFrameworkCore;
 
 namespace AccesoDatos.Repositories
 {
-    public class LibroRepository : ILibroRepository
+    public class LibroRepository : RepositoryBase<Libro>, ILibroRepository
     {
         public void Agregar(Libro libro)
         {
@@ -19,12 +18,35 @@ namespace AccesoDatos.Repositories
 
         public List<Libro> ObtenerTodos()
         {
+            return ObtenerTodosCon("Autor", "Categoria")
+                .Where(l => l.Activo)
+                .OrderBy(l => l.Titulo)
+                .ToList();
+        }
+
+        public void Modificar(int id, string nuevoTitulo)
+        {
             using (var context = new DBcontext())
             {
-                return context.Libros
-                    .Include(l => l.Autor)
-                    .OrderBy(l => l.Titulo)
-                    .ToList();
+                var libro = context.Libros.Find(id);
+                if (libro != null)
+                {
+                    libro.Titulo = nuevoTitulo;
+                    context.SaveChanges();
+                }
+            }
+        }
+
+        public void Eliminar(int id)
+        {
+            using (var context = new DBcontext())
+            {
+                var libro = context.Libros.Find(id);
+                if (libro != null)
+                {
+                    libro.Activo = false;
+                    context.SaveChanges();
+                }
             }
         }
     }
